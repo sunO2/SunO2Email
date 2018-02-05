@@ -5,7 +5,8 @@
     <string name="prompt_email">输入发送邮箱</string>
     <string name="prompt_password">输入授权码</string>
     <string name="action_sign_in">绑定</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in_short">绑定</string>
+    <string name="action_reception_in_short">接收邮箱</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>

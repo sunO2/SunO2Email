@@ -68,6 +68,6 @@ public class Phone {
     }
 
     public String getEmailMessage() {
-        return Contain.getVerCodeMessage("未接电话",mPhoneNumber,"来电");
+        return Contain.getVerCodeMessage("未接电话",mPhoneNumber,mName+"(" + mPhoneNumber + ")    响铃 ：" + getmTheTinkleOfBellsCount() + " 秒" );
     }
 }

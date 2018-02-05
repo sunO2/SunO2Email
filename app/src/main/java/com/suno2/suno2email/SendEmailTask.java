@@ -6,8 +6,6 @@ import android.util.Log;
 
 import com.suno2.suno2email.builde.Message;
 
-import org.json.JSONObject;
-
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -30,11 +28,8 @@ public class SendEmailTask extends AsyncTask<Void, Void, Boolean> {
 
     private Message mMessage;
 
-    private Context context;
-
     public SendEmailTask(Context context, Message message) {
         this.mMessage = message;
-        this.context = context;
     }
 
     /**
@@ -54,8 +49,6 @@ public class SendEmailTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-
-
             // 创建Properties 类用于记录邮箱的一些属性
             final Properties props = new Properties();
             // 表示SMTP发送邮件，必须进行身份验证
@@ -65,9 +58,9 @@ public class SendEmailTask extends AsyncTask<Void, Void, Boolean> {
             //端口号，QQ邮箱给出了两个端口，但是另一个我一直使用不了，所以就给出这一个587
             props.put("mail.smtp.port", "587");
             // 此处填写你的账号
-            props.put("mail.user", "2854918124@qq.com");
+            props.put("mail.user", Contain.getString(Contain.KEY_EMAIL));
             // 此处的密码就是前面说的16位STMP口令
-            props.put("mail.password", "vsuquuhaoxyadghj");
+            props.put("mail.password", Contain.getString(Contain.KEY_PASSWPRD));
 
             // 构建授权信息，用于进行SMTP进行身份验证
             Authenticator authenticator = new Authenticator() {
@@ -88,7 +81,7 @@ public class SendEmailTask extends AsyncTask<Void, Void, Boolean> {
                     props.getProperty("mail.user"));
             message.setFrom(form);
             // 设置收件人的邮箱
-            InternetAddress to = new InternetAddress("354137379@qq.com");
+            InternetAddress to = new InternetAddress(Contain.getString(Contain.KEY_RECEPTION_EMAIL));
             message.setRecipient(javax.mail.Message.RecipientType.TO, to);
             // 设置邮件标题
             message.setSubject(mMessage.getTitle());

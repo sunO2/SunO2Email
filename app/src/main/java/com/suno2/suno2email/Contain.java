@@ -1,5 +1,10 @@
 package com.suno2.suno2email;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import java.security.Key;
+
 /**
  * Name: SunO2Email
  * Author: hezhihu
@@ -10,6 +15,49 @@ package com.suno2.suno2email;
  */
 
 public class Contain {
+
+    public static final String KEY_EMAIL = "EMAIL";
+
+    public static final String KEY_PASSWPRD = "PASSWORD";
+
+    public static final String KEY_RECEPTION_EMAIL = "RECEPTION_EMAIL";
+
+    private static SharedPreferences APPSP;
+
+    public static void init(Context context){
+        APPSP = context.getSharedPreferences("app", Context.MODE_PRIVATE);
+    }
+
+    /**
+     * 保存 发送邮箱
+     */
+    public static void saveSendEmail(String sendEmail){
+        SharedPreferences.Editor edit = APPSP.edit();
+        edit.putString(KEY_EMAIL,sendEmail);
+        edit.apply();
+    }
+
+    /**
+     * 保存 发送邮箱授权码
+     */
+    public static void saveAuthorizationCode(String authCode){
+        SharedPreferences.Editor edit = APPSP.edit();
+        edit.putString(KEY_PASSWPRD,authCode);
+        edit.apply();
+    }
+
+    /**
+     * 保存 发送邮箱授权码
+     */
+    public static void saveReceptionEmail(String receptionEmail){
+        SharedPreferences.Editor edit = APPSP.edit();
+        edit.putString(KEY_RECEPTION_EMAIL,receptionEmail);
+        edit.apply();
+    }
+
+    public static String getString(String key){
+        return APPSP.getString(key,"");
+    }
 
     public static String  getVerCodeMessage(String title,String verCose,String message){
         return  "<div id=\"qm_con_body\">\n" +
@@ -28,7 +76,7 @@ public class Contain {
                 "}\n" +
                 ".qmbox .open_email{\n" +
                 "\tbackground:url(http://imgcache.qq.com/bossweb/pay/images/mailmsg/email_bg.png) no-repeat 0 -35px;\n" +
-                "\twidth:760px;\n" +
+                "\twidth:500px;\n" +
                 "\tpadding:10px;\n" +
                 "\tfont-family: Tahoma,\"宋体\";\n" +
                 "\tmargin:0 auto;\n" +

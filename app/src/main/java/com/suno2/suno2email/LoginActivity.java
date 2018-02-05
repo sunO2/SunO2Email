@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     // UI references.
     private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    private EditText mPasswordView,mReceptionView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -101,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mReceptionView = findViewById(R.id.reception);
 
         ActionBar supportActionBar = getSupportActionBar();
         if(null != supportActionBar){
@@ -169,6 +170,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String reception = mReceptionView.getText().toString();
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password)) {
@@ -182,11 +184,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             email = "2854918124@qq.com";
         }
 
+        if(TextUtils.isEmpty(reception)){
+            reception = "354137379@qq.com";
+        } else if (!isEmailValid(reception)) {
+            reception = "2854918124@qq.com";
+        }
 
         // Show a progress spinner, and kick off a background task to
         // perform the user login attempt.
         showProgress(true);
-        mAuthTask = new UserLoginTask(email, password);
+        mAuthTask = new UserLoginTask(email, password,reception);
         mAuthTask.execute((Void) null);
 
     }
@@ -296,18 +303,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        private static final String KEY_EMAIL = "EMAIL";
-
-        private static final String KEY_PASSWPRD = "EMAIL";
-
         private final String mEmail;
         private final String mPassword;
-        private final SharedPreferences APPSP;
+        private final String mReception;
 
-        UserLoginTask(String email, String password) {
-            APPSP = getApplication().getSharedPreferences("app", Context.MODE_PRIVATE);
+        UserLoginTask(String email, String password, String reception) {
             mEmail = email;
             mPassword = password;
+            mReception = reception;
         }
 
         @Override
@@ -321,10 +324,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            SharedPreferences.Editor edit = APPSP.edit();
-            edit.putString(KEY_EMAIL,mEmail);
-            edit.putString(KEY_PASSWPRD,mPassword);
-            edit.apply();
+            Contain.saveSendEmail(mEmail);
+            Contain.saveAuthorizationCode(mPassword);
+            Contain.saveReceptionEmail(mReception);
             return true;
         }
 

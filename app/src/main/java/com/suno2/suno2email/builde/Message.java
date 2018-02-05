@@ -80,7 +80,6 @@ public class Message {
 
         public Builde setMessage(String message) {
             this.message = message;
-            Log.d("TAG",message);
             return this;
         }
 

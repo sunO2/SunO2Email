@@ -25,13 +25,13 @@ import static android.provider.BlockedNumberContract.BlockedNumbers.COLUMN_ID;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
 
-    private String mPhone;
+    private static String mPhone;
 
-    private SendEmailTask mSendEmailTask;
+    private static SendEmailTask mSendEmailTask;
 
-    private HashMap<String,Phone> phoneHashMap = new HashMap<>();
+    private static HashMap<String,Phone> phoneHashMap = new HashMap<>();
 
-    private PhoneListener listener;
+    private static PhoneListener listener;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -39,7 +39,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
             listener = new PhoneListener(context);
             tm.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
-            Log.d("TAG","接收到来电广播");
+            Log.d("TAG","接收到来电广播" + this);
         }
 
     }
@@ -54,6 +54,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
+            super.onCallStateChanged(state,incomingNumber);
             String title = "未知状态";
             switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:   //来电
