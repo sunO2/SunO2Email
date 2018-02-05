@@ -25,9 +25,12 @@ import static android.provider.BlockedNumberContract.BlockedNumbers.COLUMN_ID;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
 
+    private String mPhone;
+
     private SendEmailTask mSendEmailTask;
 
     private HashMap<String,Phone> phoneHashMap = new HashMap<>();
+
     private PhoneListener listener;
 
     @Override
@@ -51,25 +54,28 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
-            String title = "位置状态";
+            String title = "未知状态";
             switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:   //来电
                     Phone phoneStatus = getPhoneStatus(context,incomingNumber);
                     phoneStatus.setmTheTinkleOfBellsCount(incomingNumber);
+                    mPhone = incomingNumber;
                     Log.d("TAG","电话 来电通知 :" +  incomingNumber);
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:   //接通电话
                     title = "电话 接听通知";
-                    if(!TextUtils.isEmpty(incomingNumber)) {
-                        sendPhoneStatusEmail(title, getPhoneStatus(context, incomingNumber));
+                    if(TextUtils.isEmpty(incomingNumber)) {
+                       incomingNumber = mPhone;
                     }
+                    sendPhoneStatusEmail(context,title, getPhoneStatus(context, incomingNumber));
                     Log.d("TAG","电话 接听通知 :" +  incomingNumber);
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:  //挂掉电话
                     title = "电话 挂断通知";
-                    if(!TextUtils.isEmpty(incomingNumber)) {
-                        sendPhoneStatusEmail(title, getPhoneStatus(context, incomingNumber));
+                    if(TextUtils.isEmpty(incomingNumber)) {
+                       incomingNumber = mPhone;
                     }
+                    sendPhoneStatusEmail(context,title, getPhoneStatus(context, incomingNumber));
                     Log.d("TAG","电话 挂断通知 :" +  incomingNumber);
                     break;
             }
@@ -95,14 +101,14 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
      * @param title
      * @param phoneStatus
      */
-    private void sendPhoneStatusEmail(String title, Phone phoneStatus){
+    private void sendPhoneStatusEmail(Context context,String title, Phone phoneStatus){
         String phoneNumber = phoneStatus.getPhoneNumber();
         Message build = new Message.Builde()
                 .setTitle(title)
-                .setMessage("来电人 :" + phoneStatus.getmName() +" \n手机号码 :" + phoneNumber + "\n 响铃 :" + phoneStatus.getmTheTinkleOfBellsCount() + " 次" )
+                .setMessage(phoneStatus.getEmailMessage())
                 .setMunber(phoneNumber)
                 .build();
-        mSendEmailTask = new SendEmailTask(build);
+        mSendEmailTask = new SendEmailTask(context,build);
         mSendEmailTask.execute((Void) null);
         phoneHashMap.remove(phoneNumber);
     }

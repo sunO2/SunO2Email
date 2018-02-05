@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -40,6 +41,7 @@ import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.RECEIVE_BOOT_COMPLETED;
+import static android.Manifest.permission.RECEIVE_SMS;
 
 /**
  * A login screen that offers login via email/password.
@@ -99,6 +101,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        ActionBar supportActionBar = getSupportActionBar();
+        if(null != supportActionBar){
+            supportActionBar.setTitle("绑定邮箱");
+        }
     }
 
     private void populateAutoComplete() {
@@ -122,11 +129,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
                         public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS,READ_PHONE_STATE,RECEIVE_BOOT_COMPLETED}, REQUEST_READ_CONTACTS);
+                            requestPermissions(new String[]{READ_CONTACTS,READ_PHONE_STATE,RECEIVE_BOOT_COMPLETED,RECEIVE_SMS}, REQUEST_READ_CONTACTS);
                         }
                     });
         } else {
-            requestPermissions(new String[]{READ_CONTACTS,READ_PHONE_STATE,RECEIVE_BOOT_COMPLETED}, REQUEST_READ_CONTACTS);
+            requestPermissions(new String[]{READ_CONTACTS,READ_PHONE_STATE,RECEIVE_BOOT_COMPLETED,RECEIVE_SMS}, REQUEST_READ_CONTACTS);
         }
         return false;
     }
@@ -330,12 +337,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Toast.makeText(getApplicationContext(),"保存成功",Toast.LENGTH_LONG).show();
 
                 Message 测试信息 = new Message.Builde()
-                        .setMessage("测试信息")
-                        .setMunber("12312321")
-                        .setTitle("测试 Title")
+                        .setMessage("绑定邮箱成功")
+                        .setMunber("")
+                        .setTitle("绑定邮箱通知")
                         .build();
 
-                SendEmailTask mAuthTask = new SendEmailTask(测试信息);
+                SendEmailTask mAuthTask = new SendEmailTask(getApplicationContext(),测试信息);
                 mAuthTask.execute((Void) null);
             }
         }

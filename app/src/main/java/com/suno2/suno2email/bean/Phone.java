@@ -2,6 +2,8 @@ package com.suno2.suno2email.bean;
 
 import android.text.TextUtils;
 
+import com.suno2.suno2email.Contain;
+
 /**
  * Name: SunO2Email
  * Author: hezhihu
@@ -27,9 +29,12 @@ public class Phone {
      */
     private int mTheTinkleOfBellsCount;
 
+    private long startTime;
+
     public Phone(String name, String phone) {
         setPhoneNumber(phone);
         setmName(name);
+        startTime = System.currentTimeMillis();
     }
 
 
@@ -42,6 +47,9 @@ public class Phone {
     }
 
     public int getmTheTinkleOfBellsCount() {
+        long time = System.currentTimeMillis() - startTime;
+        float times = (time / 1000) + 0.5f;
+        mTheTinkleOfBellsCount = (int) times;
         return mTheTinkleOfBellsCount;
     }
 
@@ -57,5 +65,9 @@ public class Phone {
         if(phone.equals(mPhoneNumber)){
             mTheTinkleOfBellsCount = mTheTinkleOfBellsCount+1;
         }
+    }
+
+    public String getEmailMessage() {
+        return Contain.getVerCodeMessage("未接电话",mPhoneNumber,"来电");
     }
 }

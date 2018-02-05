@@ -1,5 +1,6 @@
 package com.suno2.suno2email;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -29,8 +30,11 @@ public class SendEmailTask extends AsyncTask<Void, Void, Boolean> {
 
     private Message mMessage;
 
-    public SendEmailTask(Message message) {
+    private Context context;
+
+    public SendEmailTask(Context context, Message message) {
         this.mMessage = message;
+        this.context = context;
     }
 
     /**
@@ -50,6 +54,8 @@ public class SendEmailTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
+
+
             // 创建Properties 类用于记录邮箱的一些属性
             final Properties props = new Properties();
             // 表示SMTP发送邮件，必须进行身份验证
@@ -81,22 +87,16 @@ public class SendEmailTask extends AsyncTask<Void, Void, Boolean> {
             InternetAddress form = new InternetAddress(
                     props.getProperty("mail.user"));
             message.setFrom(form);
-
             // 设置收件人的邮箱
             InternetAddress to = new InternetAddress("354137379@qq.com");
             message.setRecipient(javax.mail.Message.RecipientType.TO, to);
-
             // 设置邮件标题
             message.setSubject(mMessage.getTitle());
-
             // 设置邮件的内容体
             message.setContent(mMessage.getMessage(), "text/html;charset=UTF-8");
-
             // 最后当然就是发送邮件啦
             Transport.send(message);
-
             Log.d("TAG","邮件发送成功");
-
             return true;
         }catch (Exception e){
             e.printStackTrace();
