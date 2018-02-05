@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         }
                     });
         } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+            requestPermissions(new String[]{READ_CONTACTS,READ_PHONE_STATE,RECEIVE_BOOT_COMPLETED}, REQUEST_READ_CONTACTS);
         }
         return false;
     }

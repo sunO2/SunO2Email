@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.suno2.suno2email.builde.Message;
 
+import org.json.JSONObject;
+
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -94,6 +96,7 @@ public class SendEmailTask extends AsyncTask<Void, Void, Boolean> {
             Transport.send(message);
 
             Log.d("TAG","邮件发送成功");
+
             return true;
         }catch (Exception e){
             e.printStackTrace();

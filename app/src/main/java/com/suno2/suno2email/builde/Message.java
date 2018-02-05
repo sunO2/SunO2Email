@@ -1,5 +1,7 @@
 package com.suno2.suno2email.builde;
 
+import android.util.Log;
+
 /**
  * Name: SunO2Email
  * Author: hezhihu
@@ -21,6 +23,9 @@ public class Message {
      */
     String munber;
 
+    /**
+     * 邮件标题
+     */
     String title;
 
 
@@ -32,6 +37,7 @@ public class Message {
     Message(String title,String munber, String message) {
         this.message = message;
         this.munber = munber;
+        this.title = title;
     }
 
 
@@ -45,6 +51,15 @@ public class Message {
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "message='" + message + '\'' +
+                ", munber='" + munber + '\'' +
+                ", title='" + title + '\'' +
+                '}';
     }
 
     public static class Builde{
@@ -65,6 +80,7 @@ public class Message {
 
         public Builde setMessage(String message) {
             this.message = message;
+            Log.d("TAG",message);
             return this;
         }
 
