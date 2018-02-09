@@ -2,6 +2,7 @@ package com.suno2.suno2email;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import java.security.Key;
 
@@ -60,6 +61,19 @@ public class Contain {
     }
 
     public static String  getVerCodeMessage(String title,String verCose,String message){
+
+       if(!TextUtils.isEmpty(message)){
+           char[] chars = message.toCharArray();
+           String tempString = "";
+           for(int i = 0;i<chars.length;i++){
+               tempString = tempString + chars[i];
+               if((i!=0) && (i%15 == 0)){
+                    tempString = tempString+"<br\\/>";
+               }
+           }
+           message = tempString;
+       }
+
         return  "<div id=\"qm_con_body\">\n" +
                 "\t<div id=\"mailContentContainer\" class=\"qmbox qm_con_body_content qqmail_webmail_only\" style=\"\">\n" +
                 "\t\t<style>\n" +

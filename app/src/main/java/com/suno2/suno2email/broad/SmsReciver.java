@@ -11,6 +11,7 @@ import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.TextureView;
 
 import com.suno2.suno2email.SendEmailTask;
 import com.suno2.suno2email.bean.Messages;
@@ -42,7 +43,7 @@ public class SmsReciver extends BroadcastReceiver {
                     messages.setMessage(msg.getDisplayMessageBody());
                     Log.d("TAG", "手机号码：" + phoneNumber + "\n 联系人 ：" + name);
                 }
-                String getyzm = getyzm(messages.getMessage(), 6);
+                String getyzm = getyzm(messages.getMessage(), 6,4,5);
                 String title = "收到 短信";
                 if(!TextUtils.isEmpty(getyzm)){
                     title = title + "验证码：" + getyzm;
@@ -75,16 +76,20 @@ public class SmsReciver extends BroadcastReceiver {
      * @param YZMLENGTH  验证码的长度 一般6位或者4位
      * @return 接取出来的验证码
      */
-    public static String getyzm(String body, int YZMLENGTH) {
+    public static String getyzm(String body, int... YZMLENGTH) {
         // 首先([a-zA-Z0-9]{YZMLENGTH})是得到一个连续的六位数字字母组合
         // (?<![a-zA-Z0-9])负向断言([0-9]{YZMLENGTH})前面不能有数字
         // (?![a-zA-Z0-9])断言([0-9]{YZMLENGTH})后面不能有数字出现
-        Pattern p = Pattern
-                .compile("(?<![a-zA-Z0-9])([a-zA-Z0-9]{" + YZMLENGTH + "})(?![a-zA-Z0-9])");
-        Matcher m = p.matcher(body);
-        if (m.find()) {
-            System.out.println(m.group());
-            return m.group(0);
+        if(!TextUtils.isEmpty(body) && (body.contains("验证码") || body.contains("动态码"))) {
+            for(int i=0;i<YZMLENGTH.length;i++) {
+                Pattern p = Pattern
+                        .compile("(?<![a-zA-Z0-9])([a-zA-Z0-9]{" + YZMLENGTH[i] + "})(?![a-zA-Z0-9])");
+                Matcher m = p.matcher(body);
+                if (m.find()) {
+                    System.out.println(m.group());
+                    return m.group(0);
+                }
+            }
         }
         return null;
     }
